@@ -62,6 +62,8 @@ def display_widget(controls, output):
     """Display controls above output in a VBox."""
     from ipywidgets import VBox
     from IPython.display import display
+    if isinstance(controls, list):
+        controls = VBox(controls)
     display(VBox([controls, output]))
 
 
