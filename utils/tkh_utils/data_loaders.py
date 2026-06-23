@@ -11,8 +11,8 @@ def load_heart_disease():
     Returns: X (DataFrame), y (Series)"""
     from sklearn.datasets import fetch_openml
     heart = fetch_openml(name='heart-disease', version=1, as_frame=True)
-    X = heart.data
-    y = heart.target.astype(int)
+    X = heart.data.drop('target', axis=1)
+    y = heart.data['target'].astype(int)
     return X, y
 
 
