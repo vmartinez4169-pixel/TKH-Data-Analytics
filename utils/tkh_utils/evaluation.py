@@ -7,16 +7,19 @@ def plot_confusion_matrix(y_true, y_pred, title="Confusion Matrix"):
 
     cm = confusion_matrix(y_true, y_pred)
     labels = ["Negative", "Positive"]
+    cm_max = cm.max() if cm.max() > 0 else 1
 
     annotations = []
     for i in range(len(cm)):
         for j in range(len(cm[i])):
+            # Dark text on light (low-count) cells, white text on dark (high-count) cells
+            text_color = "white" if (cm[i][j] / cm_max) >= 0.5 else "#1a1a2e"
             annotations.append(
                 dict(
                     x=labels[j],
                     y=labels[i],
                     text=str(cm[i][j]),
-                    font=dict(color="white", size=16),
+                    font=dict(color=text_color, size=16),
                     showarrow=False,
                 )
             )
@@ -38,6 +41,9 @@ def plot_confusion_matrix(y_true, y_pred, title="Confusion Matrix"):
             yaxis_title="Actual",
         ),
     )
+    # sklearn's confusion_matrix() puts row 0 (Negative) first — reverse the y-axis
+    # so it renders on top, matching sklearn's row-0-on-top convention.
+    fig.update_yaxes(autorange="reversed")
     fig.update_layout(annotations=annotations)
     return fig
 
